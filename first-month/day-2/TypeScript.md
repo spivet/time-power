@@ -118,9 +118,18 @@ function InfiniteLoop(): never {
 
 ### object 类型
 
+`JavaScript` 中的所有引用类型都是对象，所以在 `TypeScript` 中的 `object` 类型适用于所有引用类型。
+
+虽然在 `JavaScript` 中，使用 `typeof null`，会返回 `'object'`，但这属于设计失误，在 TypeScript 中弥补了这一点。
+
 ```typescript
 const obj1: object = {}
 const obj2: object = new Number(1)
 const obj3: object = new Date()
 const obj4: object = Object.create(null)
+// 别忘了数组和函数也是对象
+const obj5: object = [1, 2, 3]
+const obj6: object = function fn() {}
+// ts(2322) 不能将类型“null”分配给类型“object”。
+const obj7: object = null
 ```
