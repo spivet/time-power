@@ -82,4 +82,22 @@ function move(animal: Animal) {
 }
 ```
 
-我们并不需要记住所有类型缩小的方式，因为当代码存在潜在风险时，TypeScript 会在开发环境就给我们提示，我们只需要在发现错误时及时做出对应修改就行。
+```typescript
+interface Area {
+    width: number,
+    height: number,
+}
+interface Solid extends Area {
+    length: number,
+}
+function volume(param: Solid | Area) {
+    // 判断对象里是否存在某个属性，使用 in 操作符
+    // param.length 的方式会提示报错
+    if ('length' in param) {
+        return param.height * param.width * param.length
+    }
+    return param.height * param.width
+}
+```
+
+记住常用类型缩小的方式，这样才能在 TypeScript 作出提示时，我们能及时做出对应修改。
