@@ -99,3 +99,81 @@ interface Request {
     post(url: string, options: object): any 
 }
 ```
+
+### 剩余参数
+
+函数剩余参数也可以指定类型，但必须是数组类型：
+
+```typescript
+// 可以使用普通方式定义数组
+function multiply(n: number, ...m: number[]) {
+    return m.map((x) => n * x);
+}
+const a = multiply(10, 1, 2, 3, 4);
+
+// 也可以使用 Array 泛型的方式
+function multiply2(n: number, ...m: Array<number>) {
+    return m.map(x => n * x)
+}
+const b = multiply2(10, 1, 2, 3, 4);
+```
+
+### 声明 this 指向
+
+在 TypeScript 中，我们还可以显示声明函数中 `this` 的指向，以确保方法得到正确调用。
+
+```typescript
+type ObjType = {
+    name: string,
+    age: 21,
+    fn(this: ObjType, age: number): void
+}
+const obj: ObjType = {
+    name: 'tony',
+    age: 21,
+    fn(age: number) {
+        console.log(`I'm ${this.name}, I'm ${age} years old`)
+    }
+}
+obj.fn(obj.age) // 正确
+
+const fn2 = obj.fn
+fn2(obj.age) // ts(2684) 提示错误，因为这里的 this 在非严格模式下指向 window
+```
+
+### 重载
+
+JavaScript 中是没有函数重载的，定义同名函数，只会相互覆盖。
+
+不过 TypeScript 在开发阶段帮我们实现了函数重载，以便更精确地描述 `参数` 与 `返回值类型` 约束关系的函数类型。
+
+```typescript
+function areaOrVolume(length: number, width: number): number;
+function areaOrVolume(length: number, width: number, height: number): number;
+function areaOrVolume(length: number, width: number, height?: number): number {
+    if (!height) {
+        return width * length
+    }
+    return width * length * height
+}
+areaOrVolume(2, 4)
+```
+
+函数重载签名与其实现签名必须兼容：
+
+```typescript
+function areaOrVolume(length: number, width: number): number; // 此重载签名与其实现签名不兼容。ts(2394)
+function areaOrVolume(length: number, width: number, height: number): number;
+
+// 注意函数实现这里，去掉了 height 参数后的可选操作符 ?
+function areaOrVolume(length: number, width: number, height: number): number {
+    if (!height) {
+        return width * length
+    }
+    return width * length * height
+}
+areaOrVolume(2, 4)
+```
+
+> 如非特别需要，尽量还是使用联合类型定义参数，而不是函数重载。
+
