@@ -12,6 +12,23 @@ Function.prototype.myCall = function (ctx, ...args) {
 }
 ```
 
+### apply 实现
+
+```javascript
+Function.prototype.myApply = function (ctx, arr) {
+    if (!Array.isArray(arr)) {
+        throw new TypeError('CreateListFromArrayLike called on non-object')
+    }
+
+    const fn = Symbol()
+    ctx.fn = this
+    const result = ctx.fn(...arr)
+    delete ctx.fn
+
+    return result
+}
+```
+
 ### bind 实现
 
 ```javascript
