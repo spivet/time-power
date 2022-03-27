@@ -127,3 +127,38 @@ const calcStep = curry(getVolume, 5)
 const volume = calcStep(2, 3)
 console.log(volume) // 30
 ```
+
+### 思考题
+
+实现一个 `add` 方法，实现如下预期：
+
+```javascript
+// 可以实现值为 6 的预期
+add(1)(2)(3)
+// 可以实现值为 10 的预期
+add(1, 2, 3)(4)
+```
+
+`add` 可以不断传入值，因此返回值肯定是一个函数，需要调用其它方法返回值。
+
+```javascript
+function add(...initArgs) {
+    // 利用闭包保存传入的参数
+    const allArgs = [...initArgs];
+    const _add = function (...args) {
+        allArgs.push(...args)
+        return _add
+    }
+
+    // 实现一个 value 方法，返回计算值
+    _add.value = function() {
+        return allArgs.reduce((prev, next) => prev + next, 0)
+    }
+
+    // 返回 _add 函数，可以不断传入参数
+    return _add
+}
+
+console.log(add(1,2,3).value())
+console.log(add(1,2,3)(4).value())
+```
