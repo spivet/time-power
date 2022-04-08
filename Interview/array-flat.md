@@ -8,3 +8,15 @@
 const arr = [1,[2,3,[4,5],6],[7,8]]
 const flatedArr = arr.flat(Infinity)
 ```
+
+### 递归
+
+利用 `reduce` 和 `concat` 递归实现
+
+```javascript
+function flatArray(arr) {
+    return arr.reduce((flated, next) => {
+        return flated.concat(Array.isArray(next) ? flatArray(next) : next)
+    }, [])
+}
+```
