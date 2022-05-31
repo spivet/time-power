@@ -157,6 +157,42 @@ function _createVNode(type, props = null, children = null, patchFlag = 0, dynami
 
 从上面的代码可以看出，无论是 template 模板编译后的 `render` 函数，还是直接手写 `render` 函数，最终都将调用 `createBaseVNode` 方法去创建 VNode。
 
+我们实现一个简单的 `createBaseVNode` 方法：
+
+```javascript
+function createBaseVNode(type, props, children) {
+    const vnode = {
+        type,
+        props,
+        children
+    }
+
+    return vnode
+}
+```
+
 ## 组件的本质
 
+我们已经知道什么是虚拟 DOM，以及如何用虚拟 DOM 去描述真实 DOM。那么组件又是什么呢？
+
+简单讲，**组件就是一组 DOM 元素的封装**。因此我们可以用一个函数或者对象来封装组件：
+
+```javascript
+const sfc = {
+    // ...
+    render() {
+        return createBaseVNode('div', null, [
+            createBaseVNode('h1', null, 'Hello, Vue'),
+            createBaseVNode('button', {
+                onClick() {
+                    console.log('I was clicked!')
+                }
+            }, 'click me'),
+        ])
+    }
+}
+```
+
 ## 渲染虚拟 DOM
+
+
